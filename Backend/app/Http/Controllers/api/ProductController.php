@@ -30,8 +30,6 @@ class ProductController extends Controller
 
         $products = $query->paginate(10);
 
-
-
         return response()->json($products);
     }
 
@@ -58,11 +56,19 @@ class ProductController extends Controller
             'image_url' => 'required|string',
             'description' => 'nullable|string'
         ]);
-
         $product = Product::create($validated);
         return response()->json([
             'message' => 'Product created successfully',
             'data' => $product
         ], 201);
     }
+    
+    public function categories()
+{
+    $categories = Product::selectRaw('TRIM(LOWER(category)) as category')
+        ->distinct()
+        ->pluck('category');
+
+    return response()->json($categories);
+}
 }

@@ -7,28 +7,31 @@ import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
 const Home = () => {
-  const [Products, setProducts] = useState([]);
-  const [Category, setCategory] = useState("");
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState("");
   const [Search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const [cartCount, setCartCount] = useState(0);
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sort, setSort] = useState('');
-  const uniqueCategories = [...new Set(Products.map(p => p.category))];
+  const uniqueCategories = [...new Set(category)];
+ 
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(Search);
-    }, 500);
+    }, 700);
     return () => clearTimeout(timer);
   }, [Search]);
+
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/products", {
       params: {
-        category: Category,
+        category,
         search: debouncedSearch,
-        page: page,
+        page,
         sort: sort || ''
       }
     })
@@ -40,7 +43,7 @@ const Home = () => {
         console.log(err);
       })
 
-  }, [Category, debouncedSearch, page, sort])
+  }, [category, debouncedSearch, page, sort])
   useEffect(() => {
     if (debouncedSearch) {
       setCategory("");
@@ -48,10 +51,10 @@ const Home = () => {
   }, [debouncedSearch]);
 
   useEffect(() => {
-    if (Category) {
+    if (category) {
       setSearch("");
     }
-  }, [Category])
+  }, [category])
 
   const addToCart = (product) => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -82,22 +85,18 @@ const Home = () => {
               <option value="high">Price High to Low</option>
             </select>
             <select onChange={(e) => setCategory(e.target.value)}>
+              
               <option value="">All</option>
-
               {uniqueCategories.map((cat, index) => (
-                <option key={index} value={cat}>
-                  {cat}
+                <option key={index} value={cat.category}>
+                  {cat.category}
                 </option>
-              ))}
+              ))} 
             </select>
-            {/* <option value=""> All</option>
-              <option value="iphone">Iphones</option>
-              <option value="Samsung">Samsungs</option>
-              <option value="oneplus">OnePlus</option> */}
-            {/* </select> */}
+
           </div>
           <div className='card_details'>
-            {Products.map((item) => (
+            {products.map((item) => (
               <div key={item.id} className='product'>
                 <Link to={`products/${item.id}`}>
                   <img src={`${item.image_url}`} width={150} /></Link>
@@ -106,8 +105,7 @@ const Home = () => {
                 <h5>{item.description}</h5>
                 <button className='btn' onClick={() => addToCart(item)}>Add To Cart</button>
               </div>
-            )
-            )}
+            ))}
 
           </div>
           <div className="prev">
@@ -115,11 +113,9 @@ const Home = () => {
               Prev
             </button>
             <span> Page {page} </span>
-
             <button
               disabled={page === lastPage}
-              onClick={() => setPage(page + 1)}
-            >
+              onClick={() => setPage(page + 1)}>
               Next
             </button>
           </div>
