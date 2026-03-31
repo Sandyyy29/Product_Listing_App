@@ -15,8 +15,9 @@ const Home = () => {
   const [cartCount, setCartCount] = useState(0);
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sort, setSort] = useState('');
-  const uniqueCategories = [...new Set(category)];
- 
+  const [categories, setCategories] = useState([]);
+
+
 
 
   useEffect(() => {
@@ -44,6 +45,16 @@ const Home = () => {
       })
 
   }, [category, debouncedSearch, page, sort])
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/api/products")
+      .then((res) => {
+        const allProducts = res.data.data;
+
+        const unique = [...new Set(allProducts.map(item => item.category))];
+        setCategories(unique);
+      })
+      .catch((err) => console.log(err));
+  }, []);
   useEffect(() => {
     if (debouncedSearch) {
       setCategory("");
@@ -84,14 +95,13 @@ const Home = () => {
               <option value="low">Price Low to High</option>
               <option value="high">Price High to Low</option>
             </select>
-            <select onChange={(e) => setCategory(e.target.value)}>
-              
+            <select onChange={(e) => setCategory(e.target.value)} value={category}>
               <option value="">All</option>
-              {uniqueCategories.map((cat, index) => (
-                <option key={index} value={cat.category}>
-                  {cat.category}
+              {categories.map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
                 </option>
-              ))} 
+              ))}
             </select>
 
           </div>
