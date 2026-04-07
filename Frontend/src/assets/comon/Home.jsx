@@ -5,7 +5,8 @@ import { use } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-
+import Navbar from './Navbar';
+import Footer from './Footer'
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState("");
@@ -83,12 +84,10 @@ const Home = () => {
   };
   return (
     <div>
+      <Navbar />
       <>
         <header className='header'>
           <input type="text" className="search" placeholder='Search products...' value={Search} onChange={(e) => setSearch(e.target.value)} />
-        </header>
-        <div className='card'>
-
           <div className='Category'>
             <select onChange={(e) => setSort(e.target.value)}>
               <option value="">Sort</option>
@@ -103,17 +102,18 @@ const Home = () => {
                 </option>
               ))}
             </select>
-
           </div>
+        </header>
+        <div className='card'>
           <div className='card_details'>
             {products.map((item) => (
               <div key={item.id} className='product'>
-                <Link to={`products/${item.id}`}>
-                  <img src={`${item.image_url}`} width={150} /></Link>
+                <Link to={`/products/${item.id}`}>
+                <img src={`http://127.0.0.1:8000/storage/${item.main_image}`} width={150} /></Link>
                 <h1>{item.name}</h1>
                 <h1>{item.price}</h1>
-                <h5>{item.description}</h5>
-                <button className='btn' onClick={() => addToCart(item)}>Add To Cart</button>
+                {/* <h5>{item.description}</h5> */}
+                <button className='btn-add' onClick={() => addToCart(item)}>Add To Cart</button>
               </div>
             ))}
 
@@ -132,7 +132,7 @@ const Home = () => {
         </div>
 
       </>
-
+   <Footer />
     </div >
   )
 }

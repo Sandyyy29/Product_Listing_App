@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 
 
@@ -23,14 +23,15 @@ const Navbar = () => {
 
   return (
     <div className='navbar' >
-      <Link to={'/Home'} className='no-link'> <h1>My Store</h1> </Link>
-      <Link to={"/AddProduct"} className='no-link'><h1>AddProduct</h1></Link>
-      <Link to={'/cart'} className='no-link'>
-        <h1 > Cart 🛒 ({cartCount})</h1>
+      <Link to={'/Home'} id='mystore'><img src='/images/logo.png'  width={'200px'}/></Link>
+      <div className='no-link'>
+      <Link to={'/cart'} className='link'>
+      Cart🛒({cartCount})
       </Link>
-      <Link to={'/profile'}><h1>👤</h1></Link>
+      <Link to={'/profile'} className='link'> <i class="bi bi-person-circle"> </i> </Link>
     </div>
-  );
-};
+    </div>
+  )
+}
 
 export default Navbar;
