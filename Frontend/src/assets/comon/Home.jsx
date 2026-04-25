@@ -20,7 +20,6 @@ const Home = () => {
 
 
 
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(Search);
